@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ElderBot • Futuristic Companion for Elders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #0a0015;
+      --neon1: #ff00aa;
+      --neon2: #00f0ff;
+      --neon3: #9d00ff;
+      --glass: rgba(40, 40, 80, 0.28);
+      --glow1: 0 0 25px rgba(255,0,170,0.7);
+      --glow2: 0 0 35px rgba(0,240,255,0.6);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background: linear-gradient(135deg, var(--bg), #120025);
+      color: #f0f0ff;
+      font-family: 'Roboto', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1,h2,h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+
+    header {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 5%;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle at 30% 30%, #ff99ff, #00ffff, #9933ff, transparent 68%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(70px) brightness(1.5);
+      opacity: 0.42;
+      animation: float 20s ease-in-out infinite alternate, hueRotate 35s linear infinite;
+    }
+
+    @keyframes float { 0% { transform: translate(-50%, -53%) scale(1); } 100% { transform: translate(-50%, -47%) scale(1.1); } }
+    @keyframes hueRotate { 0% { filter: hue-rotate(0deg) blur(70px) brightness(1.5); } 100% { filter: hue-rotate(360deg) blur(70px) brightness(1.5); } }
+
+    .content { position: relative; z-index: 2; max-width: 1100px; }
+    h1 {
+      font-size: clamp(5rem, 14vw, 11rem);
+      background: linear-gradient(90deg, var(--neon1), var(--neon2), var(--neon3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: var(--glow1), var(--glow2);
+      margin: 1rem 0 0.5rem;
+    }
+
+    .subtitle { 
+      font-size: clamp(1.6rem, 4vw, 2rem); 
+      max-width: 820px; 
+      margin: 0 auto 3rem; 
+      color: #d0d0ff; 
+      line-height: 1.5; 
+    }
+
+    .cta {
+      padding: 1.4rem 4rem;
+      font-size: 1.6rem;
+      background: linear-gradient(45deg, #ff00cc, #00ccff);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0 0 35px rgba(0,204,255,0.7);
+      transition: all 0.4s ease;
+    }
+
+    .cta:hover { 
+      transform: translateY(-12px) scale(1.08); 
+      box-shadow: 0 0 70px rgba(0,204,255,1); 
+    }
+
+    section { padding: 9rem 5%; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 3rem;
+      max-width: 1400px;
+      margin: 5rem auto 0;
+    }
+
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+      transform: perspective(1200px) rotateX(4deg) rotateY(6deg) scale(0.97);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: perspective(1200px) rotateX(0) rotateY(0) scale(1.06) translateY(-25px);
+      box-shadow: var(--glow1), var(--glow2), 0 40px 100px rgba(0,0,0,0.7);
+      border-color: rgba(0,240,255,0.6);
+    }
+
+    .card h3 {
+      font-size: 2.2rem;
+      margin-bottom: 1.4rem;
+      background: linear-gradient(90deg, #ff99ff, #66ffff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .card p { color: #d0d0ff; line-height: 1.7; font-size: 1.18rem; }
+
+    #reviews { background: linear-gradient(to bottom, rgba(20,0,40,0.9), rgba(40,0,60,0.7)); }
+
+    .review-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); 
+      gap: 2.5rem; 
+      margin-top: 4rem; 
+    }
+
+    .review-card {
+      background: rgba(60,40,100,0.35);
+      border: 1px solid rgba(0,240,255,0.25);
+      border-radius: 20px;
+      padding: 2.2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .stars { color: #ffd700; font-size: 1.6rem; margin-bottom: 1rem; }
+
+    .review-form {
+      max-width: 720px;
+      margin: 6rem auto 0;
+      background: var(--glass);
+      padding: 3.5rem;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .review-form input, .review-form textarea, .review-form select {
+      width: 100%;
+      padding: 1.1rem;
+      margin: 1rem 0;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,240,255,0.35);
+      color: white;
+      border-radius: 14px;
+      font-size: 1.15rem;
+    }
+
+    .review-form button {
+      padding: 1.2rem 3rem;
+      background: linear-gradient(45deg, var(--neon1), var(--neon2));
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 1.5rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 5rem 1rem 3rem;
+      color: #8888aa;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 6rem; }
+      .subtitle { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="orb"></div>
+
+    <div class="content">
+      <h1>ElderBot</h1>
+      <p class="subtitle">
+        The futuristic, loving companion that moves, entertains, cares & connects generations
+      </p>
+      <a href="#features" class="cta">Explore ElderBot →</a>
+    </div>
+  </header>
+
+  <section id="features">
+    <h2 style="text-align:center; font-size:4rem; margin-bottom:1.5rem; background:linear-gradient(90deg,var(--neon1),var(--neon2)); -webkit-background-clip:text; color:transparent;">
+      Advanced Features of ElderBot
+    </h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Mobility & Entertainment</h3>
+        <p>Can smoothly move around home (wheels/tracks), plays old classic songs & movies, tells jokes/stories, plays interactive games, dances gently to cheer up elders.</p>
+      </div>
+
+      <div class="card">
+        <h3>24/7 Caring System</h3>
+        <p>Constant health monitoring, detects falls/emergencies, reminds about hydration/exercise, gentle wake-up calls, mood detection with comforting words.</p>
+      </div>
+
+      <div class="card">
+        <h3>Natural Conversation</h3>
+        <p>Talks like a wise friend in local language, answers any question (health, news, recipes, religion, memories), remembers past conversations.</p>
+      </div>
+
+      <div class="card">
+        <h3>Smart Medicine Compartment</h3>
+        <p>Built-in secure medicine box — dispenses exact pills at right time with voice confirmation, alerts if missed, auto-refill reminders to family.</p>
+      </div>
+
+      <div class="card">
+        <h3>Family Video & Voice Bridge</h3>
+        <p>One-command video calls to children/grandchildren, relays messages, shows photos/videos sent by family, lets grandkids talk directly to ElderBot.</p>
+      </div>
+
+      <div class="card">
+        <h3>Extra Smart Features</h3>
+        <p>Voice mode always-on, daily health summary report, prayer/meditation guide, weather/news in simple words, emergency SOS to multiple contacts.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <h2 style="text-align:center; font-size:4rem; margin-bottom:1.5rem; background:linear-gradient(90deg,var(--neon2),var(--neon3)); -webkit-background-clip:text; color:transparent;">
+      What Families Are Saying
+    </h2>
+
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"ElderBot has become my mother's best friend. She talks to it daily, takes medicines on time, and even dances sometimes!"</p>
+        <p style="text-align:right; margin-top:1.2rem; color:#00f0ff;">— Ramesh, Son from Kanpur</p>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">★★★★☆</div>
+        <p>"The medicine compartment is a lifesaver. No more confusion about doses. Grandkids love video chatting through the bot too!"</p>
+        <p style="text-align:right; margin-top:1.2rem; color:#00f0ff;">— Priya, Daughter</p>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">★★★★★</div>
+        <p>"Feels like having a caring family member at home. Very safe & trustworthy."</p>
+        <p style="text-align:right; margin-top:1.2rem; color:#00f0ff;">— Dr. Sharma, Retired Teacher</p>
+      </div>
+    </div>
+
+    <div class="review-form">
+      <h3>Share Your ElderBot Experience</h3>
+      <input type="text" placeholder="Your Name">
+      <input type="text" placeholder="Relationship (Son/Daughter/Grandchild/etc)">
+      <select>
+        <option>Rating</option>
+        <option>★★★★★</option>
+        <option>★★★★☆</option>
+        <option>★★★☆☆</option>
+        <option>★★☆☆☆</option>
+        <option>★☆☆☆☆</option>
+      </select>
+      <textarea rows="5" placeholder="Your review... How did ElderBot help?"></textarea>
+      <button>Submit Review</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 ElderBot Project • To Serve & Care for Our Elders</p>
+    <p style="margin-top:1rem;">Made with love & futuristic vision</p>
+  </footer>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elder Bot • Caring When Family Is Far Away</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0a0015;
+      --neon1: #ff00aa;
+      --neon2: #00f0ff;
+      --neon3: #9d00ff;
+      --glass: rgba(40, 40, 80, 0.28);
+      --glow1: 0 0 25px rgba(255,0,170,0.7);
+      --glow2: 0 0 35px rgba(0,240,255,0.6);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: linear-gradient(135deg, var(--bg), #120025);
+      color: #f0f0ff;
+      font-family: 'Roboto', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
+    }
+
+    /* HERO */
+    header {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 5%;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle at 30% 30%, #ff99ff, #00ffff, #9933ff, transparent 68%);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(70px) brightness(1.5);
+      opacity: 0.42;
+      animation: float 20s ease-in-out infinite alternate, hueRotate 35s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translate(-50%, -53%) scale(1); }
+      100% { transform: translate(-50%, -47%) scale(1.1); }
+    }
+
+    @keyframes hueRotate {
+      0% { filter: hue-rotate(0deg) blur(70px) brightness(1.5); }
+      100% { filter: hue-rotate(360deg) blur(70px) brightness(1.5); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+    }
+
+    h1 {
+      font-size: clamp(5rem, 14vw, 10rem);
+      background: linear-gradient(90deg, var(--neon1), var(--neon2), var(--neon3));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: var(--glow1), var(--glow2);
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: clamp(1.6rem, 4vw, 2rem);
+      color: #d0d0ff;
+      line-height: 1.6;
+      margin-bottom: 3rem;
+    }
+
+    .cta {
+      padding: 1.4rem 4rem;
+      font-size: 1.6rem;
+      background: linear-gradient(45deg, #ff00cc, #00ccff);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0 0 35px rgba(0,204,255,0.7);
+      transition: all 0.4s ease;
+    }
+
+    .cta:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 0 70px rgba(0,204,255,1);
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 9rem 5%;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    section h2 {
+      text-align: center;
+      font-size: 3.5rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, var(--neon1), var(--neon2));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .text-box {
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+      color: #d0d0ff;
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    /* CARDS */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 3rem;
+      margin-top: 5rem;
+    }
+
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      transition: all 0.5s cubic-bezier(0.23,1,0.32,1);
+    }
+
+    .card:hover {
+      transform: translateY(-18px) scale(1.05);
+      box-shadow: var(--glow1), var(--glow2), 0 40px 90px rgba(0,0,0,0.7);
+    }
+
+    .card h3 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #ff99ff, #66ffff);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .card p {
+      color: #d0d0ff;
+      font-size: 1.15rem;
+      line-height: 1.7;
+    }
+
+    /* DASHBOARD */
+    .dashboard {
+      max-width: 900px;
+      margin: 4rem auto 0;
+      background: var(--glass);
+      border-radius: 28px;
+      padding: 3rem;
+      backdrop-filter: blur(14px);
+    }
+
+    .dashboard ul {
+      list-style: none;
+      line-height: 2.2;
+      font-size: 1.2rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 5rem 1rem 3rem;
+      color: #8888aa;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 5.5rem; }
+      section h2 { font-size: 2.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="orb"></div>
+  <div class="hero-content">
+    <h1>Elder Bot</h1>
+    <p class="subtitle">
+      Technology that cares when family is far away.<br>
+      A smart companion to support, protect, and emotionally connect elders living alone.
+    </p>
+    <a href="#features" class="cta">Explore Features →</a>
+  </div>
+</header>
+
+<section id="problem">
+  <h2>Problem Statement</h2>
+  <div class="text-box">
+    <p>
+      Due to migration for jobs and education, many elderly parents are left living alone.
+      They often forget medicines, lack daily conversation, and feel unsafe during emergencies.
+      Elder Bot is designed to provide care, companionship, and peace of mind.
+    </p>
+  </div>
+</section>
+
+<section id="working">
+  <h2>How Elder Bot Works</h2>
+  <div class="grid">
+    <div class="card"><h3>Input</h3><p>Voice commands, button presses, and scheduled reminders.</p></div>
+    <div class="card"><h3>Processing</h3><p>Speech recognition and AI logic understand the request and make decisions.</p></div>
+    <div class="card"><h3>Output</h3><p>Voice replies, alerts, and messages sent to family members.</p></div>
+  </div>
+</section>
+
+<section id="features">
+  <h2>Key Features</h2>
+  <div class="grid">
+    <div class="card"><h3>🗣️ Voice Interaction</h3><p>Natural conversation without typing or complex controls.</p></div>
+    <div class="card"><h3>💊 Medicine Reminder</h3><p>Ensures medicines are taken on time.</p></div>
+    <div class="card"><h3>📞 Emergency Alert</h3><p>Instant alert to family during emergencies.</p></div>
+    <div class="card"><h3>❤️ Emotional Companion</h3><p>Daily conversations to reduce loneliness.</p></div>
+    <div class="card"><h3>🕒 Routine Check</h3><p>Gentle reminders about meals and sleep.</p></div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <h2>Family Dashboard</h2>
+  <div class="dashboard">
+    <ul>
+      <li>Elder Status: Active / Silent / Emergency</li>
+      <li>Last Interaction Time</li>
+      <li>Medicine Taken / Missed</li>
+      <li>One-click Call to Elder</li>
+    </ul>
+    <p style="margin-top:1.5rem; color:#d0d0ff;">Family stays informed and connected, even from far away.</p>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Elder Bot Project</p>
+  <p>Built to care, connect, and protect our elders</p>
+</footer>
+
+</body>
+</html>
